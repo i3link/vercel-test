@@ -25,6 +25,7 @@ export default function MedicalTranscriptionDashboard() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [expandedMeds, setExpandedMeds] = useState(false)
   const [selectedProblem, setSelectedProblem] = useState<string | null>(null)
+  const [showTimeline, setShowTimeline] = useState(false)
 
   const currentlyDiscussedMed = "Sertraline"
 
@@ -55,21 +56,149 @@ export default function MedicalTranscriptionDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="mx-auto max-w-7xl">
-        {/* Header */}
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Medical Transcription</h1>
-            <p className="text-gray-600">Patient: Sarah Johnson • DOB: 03/15/1985 • MRN: 12345</p>
+        {/* Enhanced Header with Visit Timeline and Patient Status */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Sarah Johnson</h1>
+              <p className="text-gray-600">DOB: 03/15/1985 • MRN: 12345 • Age: 39</p>
+            </div>
+            <div className="flex items-center gap-4">
+              {/* Patient Status */}
+              <div className="flex items-center gap-2 rounded-lg border bg-white px-3 py-2">
+                <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                <span className="text-sm font-medium text-gray-900">Roomed</span>
+                <span className="text-sm text-gray-600">• Room 3B</span>
+              </div>
+
+              <Button
+                variant={isRecording ? "destructive" : "default"}
+                onClick={() => setIsRecording(!isRecording)}
+                className="flex items-center gap-2"
+              >
+                {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                {isRecording ? "Stop Recording" : "Start Recording"}
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant={isRecording ? "destructive" : "default"}
-              onClick={() => setIsRecording(!isRecording)}
-              className="flex items-center gap-2"
-            >
-              {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-              {isRecording ? "Stop Recording" : "Start Recording"}
-            </Button>
+
+          {/* Visit Timeline with Enhanced Information */}
+          <div className="mt-4 rounded-lg border bg-white p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-6">
+                <div>
+                  <span className="text-sm font-medium text-gray-900">Last Visit:</span>
+                  <span className="ml-2 text-sm text-gray-600">November 15, 2024</span>
+                </div>
+                <div className="h-4 border-l border-gray-300"></div>
+                <div>
+                  <span className="text-sm font-medium text-gray-900">Visit Type:</span>
+                  <span className="ml-2 text-sm text-gray-600">Follow-up</span>
+                </div>
+                <div className="h-4 border-l border-gray-300"></div>
+                <div>
+                  <span className="text-sm font-medium text-gray-900">Provider:</span>
+                  <span className="ml-2 text-sm text-gray-600">Dr. Smith</span>
+                </div>
+              </div>
+              <Button variant="ghost" size="sm" onClick={() => setShowTimeline(!showTimeline)}>
+                Recent Visits
+                {showTimeline ? <ChevronUp className="ml-1 h-4 w-4" /> : <ChevronDown className="ml-1 h-4 w-4" />}
+              </Button>
+            </div>
+
+            {/* Last Visit Summary */}
+            <div className="mt-3 rounded-lg bg-gray-50 p-3">
+              <h4 className="text-sm font-medium text-gray-900 mb-2">Last Visit Summary & Goals</h4>
+              <p className="text-sm text-gray-700 mb-2">
+                <strong>Discussion:</strong> Reviewed depression symptoms and medication response. Patient reported
+                improved mood but continued sleep difficulties. Discussed lifestyle modifications and stress management
+                techniques.
+              </p>
+              <p className="text-sm text-gray-700">
+                <strong>Goals for Today:</strong> Assess sertraline effectiveness, review sleep patterns, consider sleep
+                hygiene counseling, check diabetes management and recent lab results.
+              </p>
+            </div>
+
+            {showTimeline && (
+              <div className="mt-4 border-t pt-4">
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="mt-2 h-2 w-2 rounded-full bg-blue-500"></div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">Today - Follow-up Visit</span>
+                        <span className="text-xs text-gray-500">In Progress</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mb-1">Depression management, medication review</p>
+                      <div className="text-xs text-gray-500">
+                        <strong>Goals:</strong> Assess current treatment response, review sleep issues
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="mt-2 h-2 w-2 rounded-full bg-gray-400"></div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">Nov 15, 2024 - Follow-up</span>
+                        <span className="text-xs text-gray-500">Completed</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mb-1">Sertraline dose adjustment, labs reviewed</p>
+                      <div className="text-xs text-gray-500">
+                        <strong>Summary:</strong> Increased sertraline to 50mg daily. Patient reported mild improvement
+                        in mood. Sleep still disrupted.
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        <strong>Goals Met:</strong> Medication optimization, lab review completed
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="mt-2 h-2 w-2 rounded-full bg-gray-400"></div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">Oct 12, 2024 - Initial Visit</span>
+                        <span className="text-xs text-gray-500">Completed</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mb-1">New patient evaluation, depression screening</p>
+                      <div className="text-xs text-gray-500">
+                        <strong>Summary:</strong> PHQ-9 score of 14. Started sertraline 25mg daily. Discussed therapy
+                        referral.
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        <strong>Goals Met:</strong> Initial assessment, treatment plan established
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="mt-2 h-2 w-2 rounded-full bg-gray-400"></div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">Sep 28, 2024 - Annual Physical</span>
+                        <span className="text-xs text-gray-500">Completed</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mb-1">Routine physical, diabetes screening</p>
+                      <div className="text-xs text-gray-500">
+                        <strong>Summary:</strong> Overall health stable. A1C elevated at 7.2%. Mood concerns noted.
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        <strong>Goals Met:</strong> Annual screening completed, diabetes management reviewed
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-3 text-center">
+                  <Button variant="ghost" size="sm" className="text-xs">
+                    View Full Visit History
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
